@@ -1,0 +1,36 @@
+preview/node_modules/
+preview/dist/
+.DS_Store
+*.pyc
+__pycache__/
+.venv/
+
+# Downloaded at setup. Do not redistribute.
+preview/public/model/
+preview/public/draco/
+preview/public/scene/
+assets/templates/
+assets/template.png
+assets/model/
+outputs/
+
+# Upstream template copies and local scratch images.
+assets/example_*.png
+assets/vehicle_image.png
+assets/template_ai_mask.png
+assets/soft_panel_alpha.png
+assets/*_raw.png
+assets/grok_*
+assets/debug_*
+assets/panel_bboxes.png
+preview/public/wraps/VintageGradient.png
+preview/public/wraps/VintageGradient_meshuv.png
+preview/public/wraps/example_*.png
+preview/public/wraps/template.png
+preview/public/wraps/template_ai_mask.png
+preview/public/wraps/soft_panel_alpha.png
+preview/public/wraps/*_meshuv.png
+preview/public/wraps/*_3d.png
+preview/public/wraps/panel_zones.json
+preview/public/wraps/uv_transform.json
+preview/public/wraps/UnicornNTD*.png

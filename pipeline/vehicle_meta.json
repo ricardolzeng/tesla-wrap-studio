@@ -1,0 +1,29 @@
+{
+  "vehicle": "modely-2025-premium",
+  "display_name": "Model Y (2025+) Premium",
+  "canvas": [
+    1024,
+    1024
+  ],
+  "paintable_pixels": 345264,
+  "rules": {
+    "format": "PNG",
+    "min_size": 512,
+    "max_size": 1024,
+    "max_bytes": 1048576,
+    "name_max": 30,
+    "name_charset": "A-Za-z0-9 _-",
+    "usb_folder": "Wraps",
+    "usb_fs": [
+      "exFAT",
+      "FAT32",
+      "MS-DOS FAT",
+      "ext3",
+      "ext4"
+    ],
+    "app_path": "Creations \u2192 Wrap \u2192 Upload (app \u22654.59.0)",
+    "car_path": "Toybox \u2192 Paint Shop \u2192 Wraps",
+    "fill": "white UV islands only; keep transparency outside panels",
+    "lighting": "flat albedo preferred; car adds clearcoat lighting"
+  }
+}

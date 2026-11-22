@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Model Y Premium Wrap 3D Preview</title>
+    <style>
+      :root {
+        --bg: #0c0e12;
+        --panel: #151922ee;
+        --text: #e8ecf4;
+        --muted: #93a0b8;
+        --accent: #3aa0ff;
+        --line: #2a3344;
+      }
+      * { box-sizing: border-box; }
+      html, body { margin: 0; height: 100%; background: var(--bg); color: var(--text); font: 14px/1.45 "SF Pro Text", "PingFang SC", sans-serif; }
+      #app { display: grid; grid-template-columns: 320px 1fr; height: 100%; }
+      aside {
+        background: var(--panel);
+        border-right: 1px solid var(--line);
+        padding: 20px 18px;
+        overflow: auto;
+        backdrop-filter: blur(12px);
+      }
+      h1 { font-size: 16px; margin: 0 0 4px; letter-spacing: 0.02em; }
+      .sub { color: var(--muted); margin-bottom: 18px; font-size: 12px; }
+      label { display: block; color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; margin: 14px 0 6px; }
+      select, button, input[type="range"] { width: 100%; }
+      select, button {
+        appearance: none;
+        border: 1px solid var(--line);
+        background: #0f131a;
+        color: var(--text);
+        border-radius: 10px;
+        padding: 10px 12px;
+      }
+      button { cursor: pointer; background: linear-gradient(180deg, #2b6fff, #1d4ed8); border: none; font-weight: 600; }
+      button.secondary { background: #1a2030; border: 1px solid var(--line); font-weight: 500; }
+      .row { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: center; }
+      .val { color: var(--muted); font-variant-numeric: tabular-nums; min-width: 3ch; text-align: right; }
+      #view { position: relative; min-height: 100%; }
+      canvas { display: block; width: 100%; height: 100%; }
+      #hud {
+        position: absolute; left: 16px; bottom: 16px; padding: 10px 12px;
+        background: #0d1118cc; border: 1px solid var(--line); border-radius: 10px;
+        color: var(--muted); font-size: 12px; max-width: 420px;
+      }
+      #status { margin-top: 12px; color: var(--muted); font-size: 12px; white-space: pre-wrap; }
+      .swatches { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin-top: 8px; }
+      .swatch { height: 28px; border-radius: 8px; border: 1px solid var(--line); cursor: pointer; }
+      @media (max-width: 900px) {
+        #app { grid-template-columns: 1fr; grid-template-rows: auto 1fr; }
+        aside { border-right: none; border-bottom: 1px solid var(--line); }
+        #view { min-height: 60vh; }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <aside>
+        <h1 id="title">特斯拉中国在售 · 3D 预览</h1>
+        <div class="sub" id="subtitle">官方第二套 UV · 不透明清漆</div>
+
+        <label>车型</label>
+        <select id="carSelect"></select>
+        <div class="sub" style="margin-top:8px">老款 3 / 老款 Y / 焕新 3（Highland）/ 焕新 Y（国内 Premium）。未加入美国独售的 2025 Standard。</div>
+
+        <label>Wrap 贴图</label>
+        <select id="wrapSelect">
+          <option value="/wraps/SharkMouth_3d.png">军绿鲨鱼嘴 · Flying Tigers</option>
+          <option value="/wraps/UnicornNTD_3d.png">Unicorn NT-D · Ceramic Pearl</option>
+          <option value="/wraps/MidnightGold.png">Grok · Midnight Gold</option>
+          <option value="/wraps/VintageGradient.png">官方示例 · Vintage Gradient</option>
+        </select>
+        <div style="height:8px"></div>
+        <input id="wrapFile" type="file" accept="image/png,image/*" />
+        <div style="height:8px"></div>
+        <button id="reloadBtn" class="secondary" type="button">重新加载当前贴图</button>
+        <label>机位</label>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <button type="button" class="secondary" data-cam="front">前脸</button>
+          <button type="button" class="secondary" data-cam="side">侧面</button>
+          <button type="button" class="secondary" data-cam="rear">车尾</button>
+          <button type="button" class="secondary" data-cam="threeQuarter">3/4</button>
+        </div>
+
+        <label>清漆 Clearcoat</label>
+        <div class="row"><input id="clearcoat" type="range" min="0" max="1" step="0.01" value="0.85" /><span class="val" id="clearcoatVal">0.85</span></div>
+
+        <label>清漆粗糙度</label>
+        <div class="row"><input id="clearcoatRoughness" type="range" min="0" max="0.5" step="0.01" value="0.14" /><span class="val" id="clearcoatRoughnessVal">0.14</span></div>
+
+        <label>金属度</label>
+        <div class="row"><input id="metalness" type="range" min="0" max="1" step="0.01" value="0.08" /><span class="val" id="metalnessVal">0.08</span></div>
+
+        <label>底漆粗糙度</label>
+        <div class="row"><input id="roughness" type="range" min="0" max="1" step="0.01" value="0.45" /><span class="val" id="roughnessVal">0.45</span></div>
+
+        <label>环境反射强度</label>
+        <div class="row"><input id="envIntensity" type="range" min="0.2" max="2.5" step="0.05" value="1.05" /><span class="val" id="envIntensityVal">1.05</span></div>
+
+        <label>底色（无贴图时）</label>
+        <div class="swatches" id="swatches"></div>
+
+        <label>环境曝光</label>
+        <div class="row"><input id="exposure" type="range" min="0.4" max="2.2" step="0.05" value="1.15" /><span class="val" id="exposureVal">1.15</span></div>
+
+        <div id="status">正在加载 3D 模型…</div>
+      </aside>
+      <div id="view">
+        <div id="hud">拖拽旋转 · 滚轮缩放 · 右键平移<br/>贴膜走官方 UV1，车身保持不透明清漆。</div>
+      </div>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
